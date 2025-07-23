@@ -23,7 +23,7 @@ class CategoryController extends Controller
      * Get categories data for AJAX requests
      */
     public function getData()
-    {
+    {    
         try {
             Log::info('CategoryController getData called');
             
