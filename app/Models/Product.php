@@ -20,6 +20,7 @@ class Product extends Model
      * The attributes that are mass assignable.
      */
     protected $fillable = [
+        'product_number',
         'name',
         'description',
         'price',
@@ -103,5 +104,31 @@ class Product extends Model
     {
         $this->stock += $quantity;
         return $this->save();
+    }
+
+    /**
+     * Generate a unique product number.
+     */
+    public static function generateProductNumber(): string
+    {
+        do {
+            $productNumber = 'PRD-' . date('Y') . '-' . str_pad(rand(1, 9999), 4, '0', STR_PAD_LEFT);
+        } while (self::where('product_number', $productNumber)->exists());
+        
+        return $productNumber;
+    }
+
+    /**
+     * Boot the model and set up event listeners.
+     */
+    protected static function boot()
+    {
+        parent::boot();
+        
+        static::creating(function ($product) {
+            if (empty($product->product_number)) {
+                $product->product_number = self::generateProductNumber();
+            }
+        });
     }
 }

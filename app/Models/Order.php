@@ -22,8 +22,20 @@ class Order extends Model
      */
     protected $fillable = [
         'user_id',
+        'order_number',
         'total_price',
         'status',
+        'customer_name',
+        'customer_email',
+        'customer_phone',
+        'shipping_address',
+        'total_amount',
+        'payment_method',
+        'payment_status',
+        'stripe_payment_intent_id',
+        'order_status',
+        'tracking_number',
+        'notes',
     ];
 
     /**
@@ -32,6 +44,9 @@ class Order extends Model
     protected $casts = [
         'status' => OrderStatus::class,
         'total_price' => 'decimal:2',
+        'total_amount' => 'decimal:2',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
     ];
 
     /**
@@ -141,5 +156,39 @@ class Order extends Model
     public function getStatusColorAttribute(): string
     {
         return $this->status->color();
+    }
+
+    /**
+     * Get the formatted order number.
+     */
+    public function getOrderNumberAttribute(): string
+    {
+        return $this->attributes['order_number'] ?? 'ORD-' . str_pad($this->id, 8, '0', STR_PAD_LEFT);
+    }
+
+    /**
+     * Generate a unique order number.
+     */
+    public static function generateOrderNumber(): string
+    {
+        do {
+            $orderNumber = 'ORD-' . date('Y') . date('m') . date('d') . '-' . str_pad(rand(1, 9999), 4, '0', STR_PAD_LEFT);
+        } while (self::where('order_number', $orderNumber)->exists());
+        
+        return $orderNumber;
+    }
+
+    /**
+     * Boot the model and set up event listeners.
+     */
+    protected static function boot()
+    {
+        parent::boot();
+        
+        static::creating(function ($order) {
+            if (empty($order->order_number)) {
+                $order->order_number = self::generateOrderNumber();
+            }
+        });
     }
 }

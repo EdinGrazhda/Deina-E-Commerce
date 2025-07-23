@@ -21,6 +21,7 @@ class OrderItem extends Model
     protected $fillable = [
         'order_id',
         'product_id',
+        'product_name',
         'quantity',
         'price',
         'total',
@@ -66,8 +67,18 @@ class OrderItem extends Model
     {
         parent::boot();
 
-        static::saving(function ($orderItem) {
-            $orderItem->calculateTotal();
+        static::creating(function ($orderItem) {
+            // Automatically calculate total when creating
+            if ($orderItem->price && $orderItem->quantity) {
+                $orderItem->total = $orderItem->price * $orderItem->quantity;
+            }
+        });
+
+        static::updating(function ($orderItem) {
+            // Automatically calculate total when updating
+            if ($orderItem->isDirty(['price', 'quantity'])) {
+                $orderItem->total = $orderItem->price * $orderItem->quantity;
+            }
         });
     }
 }
