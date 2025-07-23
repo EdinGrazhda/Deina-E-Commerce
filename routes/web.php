@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\OrderController;
 use App\Models\Product;
 use App\Livewire\Settings\Appearance;
 use App\Livewire\Settings\Password;
@@ -31,6 +33,24 @@ Route::middleware(['auth'])->group(function () {
         Route::get('products/{product}', [ProductController::class, 'show'])->name('products.show');
         Route::put('products/{product}', [ProductController::class, 'update'])->name('products.update');
         Route::delete('products/{product}', [ProductController::class, 'destroy'])->name('products.destroy');
+
+        // Categories Management
+        Route::get('categories', [CategoryController::class, 'index'])->name('categories.index');
+        Route::get('categories/data', [CategoryController::class, 'getData'])->name('categories.data');
+        Route::post('categories', [CategoryController::class, 'store'])->name('categories.store');
+        Route::get('categories/{category}', [CategoryController::class, 'show'])->name('categories.show');
+        Route::put('categories/{category}', [CategoryController::class, 'update'])->name('categories.update');
+        Route::delete('categories/{category}', [CategoryController::class, 'destroy'])->name('categories.destroy');
+
+        // Orders Management
+        Route::get('orders', [OrderController::class, 'index'])->name('orders.index');
+        Route::get('orders/data', [OrderController::class, 'getData'])->name('orders.data');
+        Route::get('orders/users', [OrderController::class, 'getUsers'])->name('orders.users');
+        Route::get('orders/statuses', [OrderController::class, 'getStatuses'])->name('orders.statuses');
+        Route::post('orders', [OrderController::class, 'store'])->name('orders.store');
+        Route::get('orders/{order}', [OrderController::class, 'show'])->name('orders.show');
+        Route::put('orders/{order}', [OrderController::class, 'update'])->name('orders.update');
+        Route::delete('orders/{order}', [OrderController::class, 'destroy'])->name('orders.destroy');
     });
 });
 
