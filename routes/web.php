@@ -3,17 +3,18 @@
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\WelcomeController;
 use App\Models\Product;
 use App\Livewire\Settings\Appearance;
 use App\Livewire\Settings\Password;
 use App\Livewire\Settings\Profile;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Mail;
 
-Route::get('/', function () {
-    return view('welcome');
-})->name('home');
+Route::get('/', [WelcomeController::class, 'index'])->name('home');
 
-Route::view('dashboard', 'dashboard')
+Route::get('dashboard', [DashboardController::class, 'index'])
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
 
@@ -50,7 +51,13 @@ Route::middleware(['auth'])->group(function () {
         Route::post('orders', [OrderController::class, 'store'])->name('orders.store');
         Route::get('orders/{order}', [OrderController::class, 'show'])->name('orders.show');
         Route::put('orders/{order}', [OrderController::class, 'update'])->name('orders.update');
+        Route::put('orders/{order}/status', [OrderController::class, 'updateStatus'])->name('orders.updateStatus');
         Route::delete('orders/{order}', [OrderController::class, 'destroy'])->name('orders.destroy');
+        
+        // Bulk Operations
+        Route::post('orders/bulk-update-status', [OrderController::class, 'bulkUpdateStatus'])->name('orders.bulkUpdateStatus');
+        Route::post('orders/bulk-send-emails', [OrderController::class, 'bulkSendEmails'])->name('orders.bulkSendEmails');
+        Route::post('orders/generate-report', [OrderController::class, 'generateReport'])->name('orders.generateReport');
     });
 });
 

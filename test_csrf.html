@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="csrf-token" content="{{ csrf_token() }}" />
+        <title>CSRF Test</title>
+    </head>
+    <body>
+        <h1>CSRF Token Test</h1>
+        <p>CSRF Token: <span id="token"></span></p>
+
+        <script>
+            const csrfToken = document
+                .querySelector('meta[name="csrf-token"]')
+                ?.getAttribute("content");
+            document.getElementById("token").textContent =
+                csrfToken || "NOT FOUND";
+            console.log("CSRF Token:", csrfToken);
+        </script>
+    </body>
+</html>

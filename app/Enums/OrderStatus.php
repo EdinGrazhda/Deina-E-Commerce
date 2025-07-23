@@ -9,6 +9,7 @@ enum OrderStatus: string
     use EnumHelpers;
 
     case PENDING = 'pending';
+    case CONFIRMED = 'confirmed';
     case PROCESSING = 'processing';
     case SHIPPED = 'shipped';
     case COMPLETED = 'completed';
@@ -21,6 +22,7 @@ enum OrderStatus: string
     {
         return match($this) {
             self::PENDING => 'Pending',
+            self::CONFIRMED => 'Confirmed',
             self::PROCESSING => 'Processing',
             self::SHIPPED => 'Shipped',
             self::COMPLETED => 'Completed',
@@ -35,7 +37,8 @@ enum OrderStatus: string
     {
         return match($this) {
             self::PENDING => 'yellow',
-            self::PROCESSING => 'blue',
+            self::CONFIRMED => 'blue',
+            self::PROCESSING => 'indigo',
             self::SHIPPED => 'purple',
             self::COMPLETED => 'green',
             self::CANCELLED => 'red',
@@ -48,7 +51,8 @@ enum OrderStatus: string
     public function canTransitionTo(OrderStatus $status): bool
     {
         return match($this) {
-            self::PENDING => in_array($status, [self::PROCESSING, self::CANCELLED]),
+            self::PENDING => in_array($status, [self::CONFIRMED, self::CANCELLED]),
+            self::CONFIRMED => in_array($status, [self::PROCESSING, self::CANCELLED]),
             self::PROCESSING => in_array($status, [self::SHIPPED, self::CANCELLED]),
             self::SHIPPED => in_array($status, [self::COMPLETED]),
             self::COMPLETED => false, // Final status
@@ -62,7 +66,8 @@ enum OrderStatus: string
     public function getNextStatuses(): array
     {
         return match($this) {
-            self::PENDING => [self::PROCESSING, self::CANCELLED],
+            self::PENDING => [self::CONFIRMED, self::CANCELLED],
+            self::CONFIRMED => [self::PROCESSING, self::CANCELLED],
             self::PROCESSING => [self::SHIPPED, self::CANCELLED],
             self::SHIPPED => [self::COMPLETED],
             self::COMPLETED => [],
