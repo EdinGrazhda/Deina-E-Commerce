@@ -92,6 +92,7 @@
                             </button>
                         </div>
                         
+                        {{-- Hidden login/register buttons
                         @if (Route::has('login'))
                             @auth
                                 <a href="{{ url('/dashboard') }}" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors">Dashboard</a>
@@ -102,6 +103,7 @@
                                 @endif
                             @endauth
                         @endif
+                        --}}
                     </div>
                 </div>
                 
@@ -579,6 +581,12 @@
                                     <textarea x-model="customerInfo.address" required rows="3"
                                               class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"></textarea>
                                 </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">City</label>
+                                    <input x-model="customerInfo.city" type="text" required 
+                                           placeholder="Enter your city"
+                                           class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white">
+                                </div>
                             </div>
                             <div class="mt-6 flex justify-between">
                                 <button type="button" @click="closeCheckout" 
@@ -651,6 +659,7 @@
                                     <p x-text="customerInfo.email"></p>
                                     <p x-text="customerInfo.phone"></p>
                                     <p x-text="customerInfo.address"></p>
+                                    <p x-text="customerInfo.city"></p>
                                 </div>
                             </div>
 
@@ -958,7 +967,8 @@
                     name: '',
                     email: '',
                     phone: '',
-                    address: ''
+                    address: '',
+                    city: ''
                 },
 
                 // Product Details Modal State
@@ -1140,7 +1150,8 @@
                         name: '',
                         email: '',
                         phone: '',
-                        address: ''
+                        address: '',
+                        city: ''
                     };
                     if (stripeCardElement) {
                         stripeCardElement.clear();

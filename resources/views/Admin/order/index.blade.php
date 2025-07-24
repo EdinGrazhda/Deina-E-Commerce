@@ -196,6 +196,7 @@
                                         <div class="text-sm font-medium text-gray-900 dark:text-white" x-text="order.customer_name || order.name"></div>
                                         <div class="text-sm text-gray-500 dark:text-gray-400" x-text="order.customer_email || order.email"></div>
                                         <div class="text-xs text-gray-400 dark:text-gray-500" x-text="order.customer_phone || order.phone"></div>
+                                        <div class="text-xs text-gray-400 dark:text-gray-500" x-text="'📍 ' + (order.city || 'N/A')"></div>
                                     </td>
                                     
                                     <!-- Items -->
@@ -300,6 +301,7 @@
                                     <p><strong>Name:</strong> <span x-text="order.customer_name || order.name"></span></p>
                                     <p><strong>Email:</strong> <span x-text="order.customer_email || order.email"></span></p>
                                     <p><strong>Phone:</strong> <span x-text="order.customer_phone || order.phone"></span></p>
+                                    <p><strong>City:</strong> <span x-text="order.city || 'N/A'"></span></p>
                                 </div>
                             </div>
                             
@@ -648,6 +650,13 @@
                                 <div>
                                     <label class="text-sm font-medium text-gray-500 dark:text-gray-400">Phone</label>
                                     <p class="text-gray-900 dark:text-white" x-text="orderDetails?.customer_phone || orderDetails?.phone || 'N/A'"></p>
+                                </div>
+                                <div>
+                                    <label class="text-sm font-medium text-gray-500 dark:text-gray-400">City</label>
+                                    <p class="text-gray-900 dark:text-white flex items-center">
+                                        <span class="mr-2">📍</span>
+                                        <span x-text="orderDetails?.city || 'N/A'"></span>
+                                    </p>
                                 </div>
                                 <div>
                                     <label class="text-sm font-medium text-gray-500 dark:text-gray-400">Shipping Address</label>

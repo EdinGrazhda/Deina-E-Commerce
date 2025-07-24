@@ -29,6 +29,7 @@ class Order extends Model
         'customer_email',
         'customer_phone',
         'shipping_address',
+        'city',
         'total_amount',
         'payment_method',
         'payment_status',

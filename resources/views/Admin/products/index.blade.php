@@ -1,9 +1,9 @@
 <x-layouts.app :title="__('Products Management')">
-    <div x-data="productsCrud()" x-cloak class="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 dark:from-gray-900 dark:to-slate-900">
+    <div x-data="productsCrud()" x-cloak class="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
         <div class="container mx-auto px-4 py-8">
             <!-- Header Section -->
             <div class="mb-8">
-                <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
+                <div class="bg-white rounded-2xl shadow-xl border border-gray-200 overflow-hidden">
                     <div class="bg-gradient-to-r from-blue-600 to-purple-600 px-8 py-6">
                         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
                             <div class="text-white">

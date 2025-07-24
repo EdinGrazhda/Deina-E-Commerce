@@ -1,14 +1,41 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="dark">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="light" data-flux-appearance="light">
     <head>
         @include('partials.head')
+        <script>
+            // Force light mode immediately to prevent flash
+            (function() {
+                const html = document.documentElement;
+                html.setAttribute('data-flux-appearance', 'light');
+                html.classList.remove('dark');
+                html.classList.add('light');
+                
+                // Override localStorage to prevent theme persistence
+                const originalSetItem = localStorage.setItem;
+                localStorage.setItem = function(key, value) {
+                    if (key === 'flux.appearance' || key.includes('theme') || key.includes('appearance')) {
+                        return originalSetItem.call(this, key, 'light');
+                    }
+                    return originalSetItem.call(this, key, value);
+                };
+                
+                // Force light mode in localStorage
+                localStorage.setItem('flux.appearance', 'light');
+            })();
+        </script>
     </head>
-    <body class="min-h-screen bg-white dark:bg-zinc-800">
-        <flux:sidebar sticky stashable class="border-e border-zinc-200 bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900">
+    <body class="min-h-screen bg-white">
+        <flux:sidebar sticky stashable class="border-e border-zinc-200 bg-zinc-50">
             <flux:sidebar.toggle class="lg:hidden" icon="x-mark" />
 
-            <a href="{{ route('dashboard') }}" class="me-5 flex items-center space-x-2 rtl:space-x-reverse" wire:navigate>
-                <x-app-logo />
+            <a href="{{ route('dashboard') }}" class="me-5 flex items-center space-x-3 rtl:space-x-reverse" wire:navigate>
+                <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-blue-600 to-purple-600">
+                    <span class="text-white font-bold text-sm">D</span>
+                </div>
+                <div class="flex flex-col">
+                    <span class="text-lg font-bold text-gray-900">Deina</span>
+                    <span class="text-xs text-gray-500">Admin Panel</span>
+                </div>
             </a>
 
             <flux:navlist variant="outline">
@@ -26,13 +53,11 @@
             <flux:spacer />
 
             <flux:navlist variant="outline">
-                <flux:navlist.item icon="folder-git-2" href="https://github.com/laravel/livewire-starter-kit" target="_blank">
-                {{ __('Repository') }}
-                </flux:navlist.item>
-
-                <flux:navlist.item icon="book-open-text" href="https://laravel.com/docs/starter-kits#livewire" target="_blank">
-                {{ __('Documentation') }}
-                </flux:navlist.item>
+                <flux:navlist.group :heading="__('Support')" class="grid">
+                    <flux:navlist.item icon="question-mark-circle" href="mailto:support@deina.com">
+                        {{ __('Contact Support') }}
+                    </flux:navlist.item>
+                </flux:navlist.group>
             </flux:navlist>
 
             <!-- Desktop User Menu -->
@@ -134,5 +159,36 @@
         {{ $slot }}
 
         @fluxScripts
+        
+        <script>
+            // Override Flux appearance settings to force light mode
+            document.addEventListener('DOMContentLoaded', function() {
+                // Force light mode
+                document.documentElement.setAttribute('data-flux-appearance', 'light');
+                document.documentElement.classList.remove('dark');
+                document.documentElement.classList.add('light');
+                
+                // Override localStorage to prevent dark mode
+                localStorage.setItem('flux.appearance', 'light');
+                
+                // Watch for any changes and force light mode
+                const observer = new MutationObserver(function(mutations) {
+                    mutations.forEach(function(mutation) {
+                        if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+                            if (document.documentElement.classList.contains('dark')) {
+                                document.documentElement.classList.remove('dark');
+                                document.documentElement.classList.add('light');
+                                document.documentElement.setAttribute('data-flux-appearance', 'light');
+                            }
+                        }
+                    });
+                });
+                
+                observer.observe(document.documentElement, {
+                    attributes: true,
+                    attributeFilter: ['class', 'data-flux-appearance']
+                });
+            });
+        </script>
     </body>
 </html>

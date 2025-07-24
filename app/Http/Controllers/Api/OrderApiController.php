@@ -24,6 +24,7 @@ class OrderApiController extends Controller
                 'customer.email' => 'required|email|max:255',
                 'customer.phone' => 'required|string|max:20',
                 'customer.address' => 'required|string',
+                'customer.city' => 'required|string|max:100',
                 'items' => 'required|array|min:1',
             ]);
 
@@ -74,6 +75,7 @@ class OrderApiController extends Controller
                         'customer_email' => $request->customer['email'],
                         'customer_phone' => $request->customer['phone'],
                         'shipping_address' => $request->customer['address'],
+                        'city' => $request->customer['city'],
                         'total_amount' => $request->amount / 100, // Convert back from cents
                         'total_price' => $request->amount / 100, // For compatibility with old system
                         'payment_method' => 'stripe',
@@ -191,6 +193,9 @@ class OrderApiController extends Controller
                 'customer' => 'required|array',
                 'customer.email' => 'required|email',
                 'customer.name' => 'required|string',
+                'customer.phone' => 'required|string',
+                'customer.address' => 'required|string',
+                'customer.city' => 'required|string|max:100',
                 'items' => 'required|array',
                 'total' => 'required|numeric',
                 'paymentMethod' => 'required|string',
@@ -233,6 +238,7 @@ class OrderApiController extends Controller
                         'customer_email' => $orderData['customer']['email'],
                         'customer_phone' => $orderData['customer']['phone'],
                         'shipping_address' => $orderData['customer']['address'],
+                        'city' => $orderData['customer']['city'],
                         'total_amount' => $orderData['total'],
                         'total_price' => $orderData['total'], // For compatibility with old system
                         'payment_method' => 'cash',
