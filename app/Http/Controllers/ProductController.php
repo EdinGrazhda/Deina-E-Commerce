@@ -72,7 +72,7 @@ class ProductController extends Controller
                     'price' => (float) $product->price,
                     'stock' => $product->stock,
                     'category' => $product->category->name ?? 'Uncategorized',
-                    'image' => $product->image ?? 'https://via.placeholder.com/300x200/e5e7eb/6b7280?text=No+Image',
+                    'image' => $product->image ? asset('storage/' . ltrim(str_replace('/storage/', '', $product->image), '/')) : 'https://via.placeholder.com/300x200/e5e7eb/6b7280?text=No+Image',
                     'created_at' => $product->created_at->format('M d, Y'),
                 ];
             }),
@@ -106,7 +106,7 @@ class ProductController extends Controller
                 $image = $request->file('image');
                 $imageName = Str::uuid() . '.' . $image->getClientOriginalExtension();
                 $imagePath = $image->storeAs('products', $imageName, 'public');
-                $validated['image'] = Storage::url($imagePath);
+                $validated['image'] = 'products/' . $imageName;
             }
 
             $product = Product::create($validated);
@@ -121,7 +121,7 @@ class ProductController extends Controller
                     'price' => (float) $product->price,
                     'stock' => $product->stock,
                     'category' => $product->category->name,
-                    'image' => $product->image ?? 'https://via.placeholder.com/300x200/e5e7eb/6b7280?text=No+Image',
+                    'image' => $product->image ? asset('storage/' . $product->image) : 'https://via.placeholder.com/300x200/e5e7eb/6b7280?text=No+Image',
                 ]
             ], 201);
 
@@ -148,7 +148,7 @@ class ProductController extends Controller
             'stock' => $product->stock,
             'category_id' => $product->category_id,
             'category' => $product->category->name ?? 'Uncategorized',
-            'image' => $product->image ?? 'https://via.placeholder.com/300x200/e5e7eb/6b7280?text=No+Image',
+            'image' => $product->image ? asset('storage/' . $product->image) : 'https://via.placeholder.com/300x200/e5e7eb/6b7280?text=No+Image',
         ]);
     }
 
@@ -171,14 +171,13 @@ class ProductController extends Controller
             if ($request->hasFile('image')) {
                 // Delete old image if exists
                 if ($product->image) {
-                    $oldImagePath = str_replace('/storage/', '', $product->image);
-                    Storage::disk('public')->delete($oldImagePath);
+                    Storage::disk('public')->delete($product->image);
                 }
 
                 $image = $request->file('image');
                 $imageName = Str::uuid() . '.' . $image->getClientOriginalExtension();
                 $imagePath = $image->storeAs('products', $imageName, 'public');
-                $validated['image'] = Storage::url($imagePath);
+                $validated['image'] = 'products/' . $imageName;
             }
 
             $product->update($validated);
@@ -194,7 +193,7 @@ class ProductController extends Controller
                     'price' => (float) $product->price,
                     'stock' => $product->stock,
                     'category' => $product->category->name,
-                    'image' => $product->image ?? 'https://via.placeholder.com/300x200/e5e7eb/6b7280?text=No+Image',
+                    'image' => $product->image ? asset('storage/' . $product->image) : 'https://via.placeholder.com/300x200/e5e7eb/6b7280?text=No+Image',
                 ]
             ]);
 
